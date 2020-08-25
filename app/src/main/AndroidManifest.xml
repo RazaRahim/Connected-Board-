@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.appsinventiv.connectedboard">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:name=".Utils.ApplicationClass"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".ui.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity android:name=".ui.UserManagement.LoginActivity" />
+        <activity
+            android:name=".ui.Splash"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.UserManagement.TeacherRegister" />
+        <activity android:name=".ui.Admin.AdminActivity" />
+        <activity android:name=".ui.Admin.AddPost" />
+        <activity android:name=".ui.UserManagement.StudentRegister" />
+        <activity android:name=".ui.UserManagement.StudentEdit" />
+        <activity android:name=".ui.UserManagement.TeacherEdit" />
+        <activity android:name=".ui.PlayVideo"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ui.Admin.AdminListOfPosts" />
+        <activity android:name=".ui.Admin.ListOfDepartments" />
+        <activity android:name=".ui.Admin.AddDepartment" />
+        <activity android:name=".ui.UserManagement.PdfList" />
+        <activity android:name=".ui.PdfList" />
+        <activity android:name=".ui.AddFaq" />
+        <activity android:name=".ui.ListOfFaqs" />
+        <activity android:name=".ui.ViewFaq" />
+
+        <provider
+            android:name=".provider.GenericFileProvider"
+            android:authorities="com.appsinventiv.connectedboard.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+    </application>
+
+</manifest>
