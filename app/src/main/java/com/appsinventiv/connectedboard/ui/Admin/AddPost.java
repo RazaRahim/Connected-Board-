@@ -25,6 +25,12 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.appsinventiv.connectedboard.Models.PostModel;
 import com.appsinventiv.connectedboard.R;
 import com.appsinventiv.connectedboard.Utils.CommonUtils;
@@ -40,6 +46,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -54,12 +61,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AddPost extends AppCompatActivity {
 
@@ -86,6 +97,8 @@ public class AddPost extends AppCompatActivity {
     private Uri Fpath;
     private ArrayList<String> departmentList = new ArrayList<>();
     private String departmentChosen;
+    private final String URL = "https://fcm.googleapis.com/fcm/send";
+    private RequestQueue mRequestQue;
 
 
     @Override
@@ -135,6 +148,13 @@ public class AddPost extends AppCompatActivity {
                 startActivityForResult(i, REQUEST_CODE_FILE);
             }
         });
+
+
+
+        mRequestQue = Volley.newRequestQueue(this);
+        FirebaseMessaging.getInstance().subscribeToTopic("demo");
+
+
 
     }
 
@@ -192,7 +212,7 @@ public class AddPost extends AppCompatActivity {
                     @SuppressWarnings("VisibleForTests")
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Get a URL to the uploaded content
-
+                        AddPost.this.sendNotification();
                         taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
@@ -493,4 +513,54 @@ public class AddPost extends AppCompatActivity {
             Log.i("Silicompressor", "Path: " + compressedFilePath);
         }
     }
+
+
+
+
+
+
+    private void sendNotification() {
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("to", "/topics/" + "demo");
+            JSONObject notificationObj = new JSONObject();
+            notificationObj.put("title", "Notice For You.");
+            notificationObj.put("body", "click to check it out!");
+
+
+            json.put("notification", notificationObj);
+
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL,
+                    json,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("MUR", "onResponse: ");
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("MUR", "onError: " + error.networkResponse);
+                }
+            }
+            ) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> header = new HashMap<>();
+                    header.put("content-type", "application/json");
+                    header.put("authorization", "key=AAAA97IAdEU:APA91bE524vdgf4u38RAXGLOOTRtOWXqklC_liIDVviWDihHznNbyr_9FR6kxZ-pZCpMZRIhOuILNv9swcMyU9h4PHKyKVzmpvYdzU3wasUk3Vlqj_FNOsXaNXBxL_NmcD5dQ4IyRURQ");
+                    return header;
+                }
+            };
+            mRequestQue.add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 }
