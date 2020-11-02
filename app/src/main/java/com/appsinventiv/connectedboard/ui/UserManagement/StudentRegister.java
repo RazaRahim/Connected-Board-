@@ -27,10 +27,12 @@ import com.appsinventiv.connectedboard.Utils.CompressImage;
 import com.appsinventiv.connectedboard.Utils.GifSizeFilter;
 import com.appsinventiv.connectedboard.Utils.Glide4Engine;
 import com.appsinventiv.connectedboard.Utils.SharedPrefs;
+import com.appsinventiv.connectedboard.otp;
 import com.appsinventiv.connectedboard.ui.MainActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -75,7 +77,7 @@ public class StudentRegister extends AppCompatActivity {
     private List<Uri> mSelected = new ArrayList<>();
     private ArrayList<String> departmentList = new ArrayList<>();
     private String departmentChosen;
-
+    FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +87,7 @@ public class StudentRegister extends AppCompatActivity {
         this.setTitle("Student register");
         image = findViewById(R.id.image);
         name = findViewById(R.id.name);
-        phone = findViewById(R.id.phone);
+        phone = findViewById(R.id.phoneno);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         whichClass = findViewById(R.id.whichClass);
@@ -98,7 +100,7 @@ public class StudentRegister extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
+        firebaseAuth = FirebaseAuth.getInstance();
         getStudentsFromDb();
         getDeparmentsFromDB();
 
@@ -116,8 +118,9 @@ public class StudentRegister extends AppCompatActivity {
                     whichClass.setError("Enter text");
                 } else if (mSelected.size() == 0) {
                     CommonUtils.showToast("Select image");
-                } else {
-                    checkUser();
+                }
+                else {
+                   checkUser();
                 }
 
             }
@@ -159,6 +162,9 @@ public class StudentRegister extends AppCompatActivity {
                 }
             }
         });
+
+
+
 
 
     }
@@ -280,6 +286,7 @@ public class StudentRegister extends AppCompatActivity {
         String[] PERMISSIONS = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.INTERNET,
 
 
         };
@@ -354,6 +361,10 @@ public class StudentRegister extends AppCompatActivity {
                 gender,
                 imgUrl, departmentChosen, phone.getText().toString()
         );
+
+
+
+
         mDatabase.child("Students").child(username.getText().toString()).setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -362,6 +373,7 @@ public class StudentRegister extends AppCompatActivity {
                 CommonUtils.showToast("Successfully registered");
                 SharedPrefs.setLoggedInAs("student");
                 SharedPrefs.setDepartment(departmentChosen);
+
                 startTeacherActivity();
 
             }
@@ -374,10 +386,16 @@ public class StudentRegister extends AppCompatActivity {
     }
 
     private void startTeacherActivity() {
-        startActivity(new Intent(StudentRegister.this, MainActivity.class));
-        finish();
+            String phoneNo = phone.getEditableText().toString();
+            Intent intent = new Intent(StudentRegister.this, otp.class);
+            intent.putExtra("PhoneNo", phoneNo);
+            startActivity(intent);
+        }
+
+//        startActivity(new Intent(StudentRegister.this, MainActivity.class));
+//        finish();
 
     }
 
 
-}
+

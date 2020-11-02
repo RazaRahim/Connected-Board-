@@ -9,8 +9,6 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import com.appsinventiv.connectedboard.ui.Admin.AddPost;
-import com.appsinventiv.connectedboard.ui.Admin.AdminListOfPosts;
 import com.appsinventiv.connectedboard.ui.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;

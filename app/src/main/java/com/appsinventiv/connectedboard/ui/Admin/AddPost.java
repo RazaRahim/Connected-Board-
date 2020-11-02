@@ -97,8 +97,8 @@ public class AddPost extends AppCompatActivity {
     private Uri Fpath;
     private ArrayList<String> departmentList = new ArrayList<>();
     private String departmentChosen;
-    private final String URL = "https://fcm.googleapis.com/fcm/send";
-    private RequestQueue mRequestQue;
+    final String URL = "https://fcm.googleapis.com/fcm/send";
+    public RequestQueue mRequestQue;
 
 
     @Override
