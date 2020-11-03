@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.appsinventiv.connectedboard">
+    package="com.razarahim.connectedboard">
 
     <application
         android:name=".Utils.ApplicationClass"
@@ -59,7 +59,7 @@
             android:resource="@color/teal_700" />
         <provider
             android:name=".provider.GenericFileProvider"
-            android:authorities="com.appsinventiv.connectedboard.provider"
+            android:authorities="com.razarahim.connectedboard.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
