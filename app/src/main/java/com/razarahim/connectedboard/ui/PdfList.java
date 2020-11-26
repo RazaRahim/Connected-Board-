@@ -102,6 +102,11 @@ public class PdfList extends AppCompatActivity {
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getUrl()));
                 startActivity(i);
             }
+
+            @Override
+            public void onLike(PostModel model) {
+
+            }
         });
 
         recyclerview.setAdapter(adapter);

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+     <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+           android:layout_margin="3dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_download_home"
+            android:id="@+id/imagec"/>
+
+        <TextView
+            android:layout_below="@id/imagec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Userid"
+            android:textStyle="italic"
+            android:textSize="12sp"
+            android:id="@+id/id"
+            android:layout_margin="5dp"/>
+
+        <LinearLayout
+            android:layout_toRightOf="@id/imagec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Name: "
+                android:id="@+id/userName"
+                android:textStyle="bold"
+                android:textColor="#000"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="messages"
+                android:textStyle="normal"
+                android:id="@+id/userComments"
+                android:layout_marginLeft="4dp"/>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+     <LinearLayout
+         android:layout_below="@id/relative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time: "
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#000"
+               />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time"
+                android:textSize="11sp"
+                android:id="@+id/time"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date: "
+                android:textStyle="bold"
+                android:textSize="11sp"
+                android:textColor="#000"
+                android:layout_marginLeft="7dp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:textSize="11sp"
+                android:id="@+id/date"
+                android:layout_marginLeft="7dp"/>
+
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#c0c0c0"/>
+
+
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.razarahim.connectedboard.ui.Admin;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +32,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.razarahim.connectedboard.Models.PostModel;
 import com.razarahim.connectedboard.R;
 import com.razarahim.connectedboard.Utils.CommonUtils;
@@ -57,7 +60,9 @@ import com.zhihu.matisse.filter.Filter;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -79,6 +84,7 @@ public class AddPost extends AppCompatActivity {
     ImageView picChosen;
     TextView fileChosen;
     EditText description;
+    String likes;
     Button post;
     RelativeLayout wholeLayout;
     private static final int REQUEST_CODE_CHOOSE = 23;
@@ -99,6 +105,7 @@ public class AddPost extends AppCompatActivity {
     private String departmentChosen;
     final String URL = "https://fcm.googleapis.com/fcm/send";
     public RequestQueue mRequestQue;
+
 
 
     @Override
@@ -153,6 +160,7 @@ public class AddPost extends AppCompatActivity {
 
         mRequestQue = Volley.newRequestQueue(this);
         FirebaseMessaging.getInstance().subscribeToTopic("demo");
+
 
 
 
@@ -238,8 +246,18 @@ public class AddPost extends AppCompatActivity {
 
     private void postNow(final String type) {
         final String id = mDatabase.push().getKey();
+
+//        String savecurrenttime, savecurrentdate;
+//        Calendar calendar = Calendar.getInstance();
+//        @SuppressLint("SimpleDateFormat") SimpleDateFormat currentdate= new SimpleDateFormat("MMM dd ");
+//        savecurrentdate = currentdate.format(calendar.getTime());
+//        @SuppressLint("SimpleDateFormat") SimpleDateFormat currenttime= new SimpleDateFormat("hh:mm a");
+//        savecurrenttime = currenttime.format(calendar.getTime());
+//
+//        long finallytime = Integer.parseInt(savecurrenttime+"  "+currentdate);
+
         PostModel model = new PostModel(id, description.getText().toString(), liveUrl, type, System.currentTimeMillis(),
-                departmentChosen);
+                departmentChosen,likes);
         mDatabase.child("Posts").child(id).setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".fullpic">
+<!--    <ImageView-->
+<!--        android:id="@+id/imageV"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="100dp"/>-->
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/imageV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingPrefix" />
+
+    <ProgressBar
+        android:id="@+id/pg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/thumb_button_1"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="75dp"-->
+<!--        android:layout_marginRight="1dp"-->
+<!--        android:layout_below="@+id/imageV"-->
+<!--        android:scaleType="centerCrop" />-->
+</RelativeLayout>

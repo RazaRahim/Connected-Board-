@@ -3,70 +3,71 @@ package com.razarahim.connectedboard.Adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-import com.razarahim.connectedboard.FavDB;
 import com.razarahim.connectedboard.Models.PostModel;
 import com.razarahim.connectedboard.R;
 import com.razarahim.connectedboard.Utils.CommonUtils;
-import com.bumptech.glide.Glide;
+import com.razarahim.connectedboard.Utils.SharedPrefs;
 import com.razarahim.connectedboard.comments;
 import com.razarahim.connectedboard.fullpic;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
-
-public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
+public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.ViewHolder> {
     Context context;
     ArrayList<PostModel> itemList;
 
     PostsAdapterCallbacks callbacks;
     boolean admin;
     ArrayList<PostModel> arrayList;
+    ArrayList<String> token_id;
 
 
+      Boolean likechecker = false;
+      String currentUserId;
 
-    public PostsAdapter(Context context, ArrayList<PostModel> itemList, boolean admin, PostsAdapterCallbacks callbacks) {
+
+    public LikeAdapter(Context context, ArrayList<PostModel> itemList, ArrayList<String> key, boolean admin, PostsAdapterCallbacks callbacks) {
         this.context = context;
         this.itemList = itemList;
         this.callbacks = callbacks;
         this.admin = admin;
+        this.token_id =key;
         this.arrayList = new ArrayList<>(itemList);
 
     }
 
-        public void setItemList(ArrayList<PostModel> itemList) {
+    public void setItemList(ArrayList<PostModel> itemList,ArrayList<String> data) {
         this.itemList = itemList;
+        this.token_id = data;
         notifyDataSetChanged();
     }
 
-    public void updateList(ArrayList<PostModel> itemList) {
+    public void updateList(ArrayList<PostModel> itemList,ArrayList<String> data) {
         this.itemList = itemList;
         arrayList.clear();
+        this.token_id = data;
         arrayList.addAll(itemList);
         notifyDataSetChanged();
     }
@@ -95,18 +96,22 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.post_item_layout, parent, false);
-        PostsAdapter.ViewHolder viewHolder = new PostsAdapter.ViewHolder(view);
+        LikeAdapter.ViewHolder viewHolder = new LikeAdapter.ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final PostModel model = itemList.get(position);
+
+        final DatabaseReference likesrefernce =FirebaseDatabase.getInstance().getReference("likes");
+
 
         if (admin) {
             holder.download.setVisibility(View.GONE);
             holder.share.setVisibility(View.GONE);
             holder.delete.setVisibility(View.VISIBLE);
+
 
         } else {
             holder.download.setVisibility(View.VISIBLE);
@@ -176,6 +181,49 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         });
 
 
+        holder.commntBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                       Intent intent = new Intent(context,comments.class);
+                       intent.putExtra("postKey",token_id.get(position));
+                       context.startActivity(intent);
+            }
+        });
+        currentUserId = SharedPrefs.getStudentModel().getRollNumber();
+        holder.setLikesbuttonStatus(token_id.get(position),currentUserId);
+
+        holder.favBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                likechecker = true;
+
+                likesrefernce.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if (likechecker.equals(true)){
+                            if (dataSnapshot.child(token_id.get(position)).hasChild(currentUserId)){
+                                likesrefernce.child(token_id.get(position)).child(currentUserId).removeValue();
+                                likechecker = false;
+                            }else {
+                                likesrefernce.child(token_id.get(position)).child(currentUserId).setValue(true);
+                                likechecker = false;
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+
     }
 
     @Override
@@ -187,7 +235,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         ImageView image, download, share, delete, playVideo, viewFile;
         TextView description, time,likeCountTextView;
         ImageView favBtn,commntBtn;
-
+        DatabaseReference likesrefernce;
 
 
         @SuppressLint("WrongViewCast")
@@ -207,10 +255,53 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             commntBtn = itemView.findViewById(R.id.comments);
 
 
+        }
 
+        public void setLikesbuttonStatus(final String postkey, final String CurrenUserId){
+            favBtn = itemView.findViewById(R.id.favBtn);
+            likeCountTextView = itemView.findViewById(R.id.likeCountTextView);
+            likesrefernce = FirebaseDatabase.getInstance().getReference("likes");
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//            final String userId = user.getUid();
+            final String likes = " Likes";
+
+            likesrefernce.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.child(postkey).hasChild(CurrenUserId)){
+                       int likescount = (int)dataSnapshot.child(postkey).getChildrenCount();
+//
+                        favBtn.setImageResource(R.drawable.ic_heart);
+                        likeCountTextView.setText(Integer.toString(likescount)+likes);
+                    }else {
+                      int  likescount = (int)dataSnapshot.child(postkey).getChildrenCount();
+                        favBtn.setImageResource(R.drawable.ic_favorite_shadow_24dp);
+                        likeCountTextView.setText(Integer.toString(likescount)+likes);
+                    }
+
+//                    Collections.sort(itemList, new Comparator<PostModel>() {
+//                        @Override
+//                        public int compare(PostModel listData, PostModel t1) {
+//                            Long ob1 = listData.getTime();
+//                            Long ob2 = t1.getTime();
+//                            return ob2.compareTo(ob1);
+//
+//                        }
+//                    });
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
         }
-//
+
+
+
     }
 
 
@@ -227,9 +318,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         public void onOpenFile(PostModel model);
 
-       public   void onLike(PostModel model);
+       public   void onComments(PostModel model);
     }
-
 
     }
 

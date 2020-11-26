@@ -18,7 +18,14 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.razarahim.connectedboard.Models.StudentModel;
 import com.razarahim.connectedboard.Models.TeacherModel;
 import com.razarahim.connectedboard.R;
@@ -78,6 +85,10 @@ public class StudentRegister extends AppCompatActivity {
     private ArrayList<String> departmentList = new ArrayList<>();
     private String departmentChosen;
     FirebaseAuth firebaseAuth;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -266,15 +277,16 @@ public class StudentRegister extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             mSelected = Matisse.obtainResult(data);
-
-            CompressImage compressImage = new CompressImage(StudentRegister.this);
-            Glide.with(StudentRegister.this).load(mSelected.get(0)).into(image);
-//            try {
-            compressedPath = compressImage.compressImage("" + mSelected.get(0));
 //
-//            } catch (Exception e) {
-//                CommonUtils.showToast(e.getMessage());
-//            }
+//
+            Glide.with(StudentRegister.this).load(mSelected.get(0)).into(image);
+          try {
+              CompressImage compressImage = new CompressImage(StudentRegister.this);
+            compressedPath = compressImage.compressImage("" + mSelected.get(0));
+
+            } catch (Exception e) {
+                CommonUtils.showToast(e.getMessage());
+            }
 
 
         }
@@ -388,6 +400,7 @@ public class StudentRegister extends AppCompatActivity {
             Intent intent = new Intent(StudentRegister.this, otp.class);
             intent.putExtra("PhoneNo", phoneNo);
             startActivity(intent);
+
         }
 
 //        startActivity(new Intent(StudentRegister.this, MainActivity.class));

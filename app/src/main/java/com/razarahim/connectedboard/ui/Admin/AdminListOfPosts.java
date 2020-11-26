@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.razarahim.connectedboard.Adapters.PostsAdapter;
 import com.razarahim.connectedboard.Models.PostModel;
 import com.razarahim.connectedboard.R;
 import com.razarahim.connectedboard.Utils.CommonUtils;
+import com.razarahim.connectedboard.ui.MainActivity;
 import com.razarahim.connectedboard.ui.PlayVideo;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -87,6 +89,16 @@ public class AdminListOfPosts extends AppCompatActivity {
 
             @Override
             public void onOpenFile(PostModel model) {
+
+            }
+
+            @Override
+            public void onLike(PostModel model) {
+//                int counter = 0;
+//                counter ++;
+//                model.setLike(Integer.toString(counter));
+//
+//                Toast.makeText(AdminListOfPosts.this, "Likes it!", Toast.LENGTH_LONG).show();
 
             }
         });

@@ -12,13 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".otp"></activity>
-
+        <activity android:name=".comments"></activity>
+        <activity android:name=".fullpic" />
+        <activity android:name=".otp" />
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="Instantiatable" />
         <activity android:name=".ui.UserManagement.LoginActivity" />
         <!--
  Set color used with incoming notification messages. This is used when no color is set for the incoming
@@ -33,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".ui.UserManagement.TeacherRegister" />
         <activity android:name=".ui.Admin.AdminActivity" />
         <activity android:name=".ui.Admin.AddPost" />
@@ -51,12 +51,14 @@
         <activity android:name=".ui.AddFaq" />
         <activity android:name=".ui.ListOfFaqs" />
         <activity android:name=".ui.ViewFaq" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_launcher_background" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/teal_700" />
+
         <provider
             android:name=".provider.GenericFileProvider"
             android:authorities="com.razarahim.connectedboard.provider"
@@ -75,13 +77,12 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

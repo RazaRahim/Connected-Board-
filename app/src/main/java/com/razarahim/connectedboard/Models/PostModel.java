@@ -1,19 +1,40 @@
 package com.razarahim.connectedboard.Models;
 
 public class PostModel {
-    String id, description, url, type, videoImgUrl, department;
+    String id, description, url, type, videoImgUrl, department,comments;
     long time;
+    String key;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public PostModel() {
     }
 
-    public PostModel(String id, String description, String url, String type, long time,String department) {
+    public PostModel(String id, String description, String url, String type, long time,String department,String comments) {
+
         this.id = id;
         this.description = description;
         this.url = url;
         this.type = type;
         this.time = time;
         this.department = department;
+        this.comments = comments;
+
+    }
+
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
 
