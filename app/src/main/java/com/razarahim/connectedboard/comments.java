@@ -51,18 +51,19 @@ public class comments extends AppCompatActivity {
 //    String userId;
     RecyclerView recyclerView;
     commentAdapter adapter;
-//    private ArrayList<commentModel> itemList = new ArrayList<>();
+    private ArrayList<commentModel> itemList = new ArrayList<>();
     final String userId = SharedPrefs.getStudentModel().getRollNumber();
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
 
-
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL ,false));
+        recyclerView.scrollToPosition(itemList.size() - 1);
+
 
 
 
@@ -72,11 +73,10 @@ public class comments extends AppCompatActivity {
                 new FirebaseRecyclerOptions.Builder<commentModel>()
                 .setQuery(FirebaseDatabase.getInstance().getReference().child("Comments").child(postKey),commentModel.class)
                 .build();
-
+        Toast.makeText(this, ""+options, Toast.LENGTH_LONG).show();
         adapter = new commentAdapter(options);
         recyclerView.setAdapter(adapter);
-
-
+        adapter.notifyDataSetChanged();
 
 
 
@@ -100,6 +100,10 @@ public class comments extends AppCompatActivity {
                             String uiImage = snapshot.child("picUrl").getValue().toString();
                             processcomment(username,uiImage);
                             commentText.setText("");
+
+                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
+
+
                         }
 
 //                        Collections.sort(itemList, new Comparator<commentModel>() {

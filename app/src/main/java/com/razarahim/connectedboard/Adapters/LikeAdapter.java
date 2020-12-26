@@ -181,6 +181,9 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.ViewHolder> {
         });
 
 
+
+
+
         holder.commntBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,6 +194,8 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.ViewHolder> {
         });
         currentUserId = SharedPrefs.getStudentModel().getRollNumber();
         holder.setLikesbuttonStatus(token_id.get(position),currentUserId);
+
+        holder.setcommentcount(token_id.get(position),currentUserId);
 
         holder.favBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,9 +238,9 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image, download, share, delete, playVideo, viewFile;
-        TextView description, time,likeCountTextView;
+        TextView description, time,likeCountTextView,commentcount;
         ImageView favBtn,commntBtn;
-        DatabaseReference likesrefernce;
+        DatabaseReference likesrefernce,commentref;
 
 
         @SuppressLint("WrongViewCast")
@@ -251,7 +256,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.ViewHolder> {
             playVideo = itemView.findViewById(R.id.playVideo);
 
             likeCountTextView = itemView.findViewById(R.id.likeCountTextView);
-
+            commentcount = itemView.findViewById(R.id.commentcont);
             commntBtn = itemView.findViewById(R.id.comments);
 
 
@@ -301,6 +306,35 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.ViewHolder> {
         }
 
 
+        public void setcommentcount(final String postkey, final String CurrenUserId){
+            commentref = FirebaseDatabase.getInstance().getReference("Comments");
+
+            final String commentC = "";
+
+            commentref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.child(postkey).hasChild(CurrenUserId)){
+                        int commentcnt = (int)dataSnapshot.child(postkey).getChildrenCount();
+
+                        commentcount.setText(Integer.toString(commentcnt)+commentC);
+                    }else {
+                        int  commentcnt = (int)dataSnapshot.child(postkey).getChildrenCount();
+
+                        commentcount.setText(Integer.toString(commentcnt)+"");
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
 
     }
 

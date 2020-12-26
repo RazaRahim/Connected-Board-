@@ -1,6 +1,10 @@
 package com.razarahim.connectedboard.ui;
 
+import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,9 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ClearCacheRequest;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.razarahim.connectedboard.Adapters.LikeAdapter;
@@ -50,6 +56,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,11 +70,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DatabaseReference mDatabase;
     private Toolbar toolbar;
     EditText search;
-
+    SwipeRefreshLayout swipeRefreshLayout;
+    ImageView swipeUp;
 //    private int counter = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -75,8 +84,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDatabase = FirebaseDatabase.getInstance().getReference();
         search = findViewById(R.id.search);
         recyclerview = findViewById(R.id.recyclerview);
-        recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, true));
+        recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
+
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                itemList.clear();
+                adapter.notifyDataSetChanged();
+                Keyss.clear();
+                getDataFromServer();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        swipeUp = findViewById(R.id.swipeImage);
+        swipeUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    recyclerview.smoothScrollToPosition(0);
+                    swipeUp.setVisibility(View.GONE);
+
+            }
+        });
 
 
 

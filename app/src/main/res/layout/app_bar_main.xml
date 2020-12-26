@@ -6,10 +6,12 @@
     android:layout_height="match_parent"
     >
 
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
+
 
 
         <androidx.appcompat.widget.Toolbar
@@ -23,5 +25,12 @@
 
     <include layout="@layout/content_main" />
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id = "@+id/swipeImage"
+        app:backgroundTint = "@color/colorPrimary"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:layout_gravity = "bottom|end"
+        android:layout_marginBottom="150dp"
+        android:src = "@android:drawable/arrow_up_float" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

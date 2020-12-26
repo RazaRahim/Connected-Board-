@@ -12,8 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycler_view"
-        android:layout_marginTop="20dp"
         android:layout_above="@id/bottom"/>
+
+
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"

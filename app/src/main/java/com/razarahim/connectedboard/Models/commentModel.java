@@ -62,5 +62,6 @@ public class commentModel {
 
     public void setTime(String time) {
         Time = time;
+
     }
 }

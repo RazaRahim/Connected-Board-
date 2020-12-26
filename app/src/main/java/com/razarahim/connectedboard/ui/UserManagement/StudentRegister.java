@@ -127,9 +127,10 @@ public class StudentRegister extends AppCompatActivity {
                     password.setError("Enter text");
                 } else if (whichClass.getText().length() == 0) {
                     whichClass.setError("Enter text");
-                } else if (mSelected.size() == 0) {
-                    CommonUtils.showToast("Select image");
                 }
+//                else if (mSelected.size() == 0) {
+//                    CommonUtils.showToast("Select image");
+//                }
                 else {
                    checkUser();
                 }
@@ -277,13 +278,12 @@ public class StudentRegister extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             mSelected = Matisse.obtainResult(data);
-//
-//
+
+
             Glide.with(StudentRegister.this).load(mSelected.get(0)).into(image);
           try {
               CompressImage compressImage = new CompressImage(StudentRegister.this);
             compressedPath = compressImage.compressImage("" + mSelected.get(0));
-
             } catch (Exception e) {
                 CommonUtils.showToast(e.getMessage());
             }
